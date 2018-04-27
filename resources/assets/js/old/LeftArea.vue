@@ -11,10 +11,6 @@
 </template>
 <script>
     import leftHeader from './left/Header.vue';
-    import Search from './left/Search.vue';
-    import groups from './left/Groups.vue';
-    import members from './left/Members.vue';
-    import leftFooter from './left/Footer.vue';
 
     export default {
         components: {

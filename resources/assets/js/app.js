@@ -1,15 +1,15 @@
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
-import VueRouter from './vue-router';
-import Vuex from './vuex';
-import leftarea from './components/LeftArea.vue';
-import Groupchat from './components/right/GroupChat.vue';
-import UserChat from './components/right/UserChat.vue';
-import home from './components/right/Home.vue';
-window.$= require("./jquery-3.3.1");
-window.Vue= require("./vue");
-require("./bootstrap.min");
-window.axios= require("./axios.min");
+import Echo from './library/echo.min';
+import Pusher from './library/pusher.min';
+import Vuex from './library/vuex';
+import VueRouter from './library/vue-router';
+import VueOffline  from './library/vue-offline';
+import { store } from './store';
+import routes from './routes';
+import VueChatScroll from 'vue-chat-scroll'
+
+window.$= require("./library/jquery-3.3.1");
+window.axios= require("./library/axios.min");
+require("./library/bootstrap.min");
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -18,70 +18,19 @@ window.Echo = new Echo({
     encrypted: true
 });
 
-Vue.use(Vuex);
 Vue.use(VueRouter);
-
-const store = new Vuex.Store({
-    state: {
-        storage : storage,
-        user : user,
-        groups : groups,
-        friends : friends
-    },
-
-    mutations: {
-        // loadGroups: function () {
-        //
-        // },
-        // loadFriends: function () {
-        //
-        // },
-
-        addLastGroupMessage(state){
-            axios.get('/groups').then(response => {
-                state.groups = response.data;
-            });
-        }
-    }
-});
+Vue.use(VueOffline);
+Vue.use(VueChatScroll);
 
 const router = new VueRouter({
     mode: 'history',
-    routes: [
-        {
-            path: '/chat/group/:group_id',
-            name: 'group',
-            component: Groupchat,
-            props: {
-                isGroup: true
-            }
-        },
-        {
-            path: '/chat/user/:user_id',
-            name: 'user',
-            component: UserChat,
-            props: {
-                isGroup: false
-            }
-        },
-        {
-            path: '/chat',
-            name: 'home',
-            component: home
-        }
-
-    ],
+    routes: routes,
+    path: "chat"
 });
 
-// Vue.prototype.$storage = storage;
-// Vue.prototype.$user = user;
-// Vue.prototype.$groups = groups;
-// Vue.prototype.$friends = friends;
-
 const app = new Vue({
-    el: '#frame',
+    el: '#app',
     components: {
-        leftarea
     },
     router,
     store,
@@ -89,6 +38,12 @@ const app = new Vue({
     },
 
     created() {
+        this.$on('online', function () {
+            this.$store.commit('checkOnline');
+        });
+        this.$on('offline', function () {
+            this.$store.commit('checkOnline');
+        })
     },
 
 

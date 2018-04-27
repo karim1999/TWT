@@ -1,8 +1,9 @@
 <template>
     <div class="content">
+        {{ $store.state.status }}
         <div class="contact-profile">
-            <img :src="storage+user.img" alt="User Image" width="50" height="40" />
-            <p>{{ user.name }}</p>
+            <img :src="storage+group.img" alt="Group Image" width="50" height="40" />
+            <p>{{ group.name }}</p>
             <div class="social-media">
                 <i class="fa fa-facebook" aria-hidden="true"></i>
                 <i class="fa fa-twitter" aria-hidden="true"></i>
@@ -33,15 +34,13 @@
             return {
                 messages: [],
                 msg: '',
-                user: []
+                group: []
             }
         },
         created(){
-            this.getUser();
-            window.Echo.private('user.'+this.currentUser.id+'.'+this.$route.params.user_id).listen('UserMessageSent', (e) => {
-                if(e.message.user_id != this.currentUser.id){
-                    this.messages.push(e.message);
-                }
+            this.getGroup();
+            window.Echo.private('group.'+this.$route.params.group_id).listen('GroupMessageSent', (e) => {
+                this.messages.push(e.message);
             });
         },
 
@@ -49,28 +48,30 @@
             messages: function (val) {
                 this.scrollDown();
             },
-            '$route': 'getUser'
+            '$route': 'getGroup'
         },
         methods: {
-            getUser: function () {
-                axios.get('/user/'+this.$route.params.user_id).then(response => {
-                    this.user= response.data;
+            getGroup: function () {
+                axios.get('/group/'+this.$route.params.group_id).then(response => {
+                    this.group= response.data;
                 });
                 this.loadMessages();
             },
             loadMessages: function () {
-                axios.get('/user/'+this.$route.params.user_id+'/messages').then(response => {
-//                    console.log(response.data);
+                axios.get('/group/'+this.$route.params.group_id+'/messages').then(response => {
                     this.messages = response.data;
                 });
             },
             sendMessage(event){
                 if(this.msg){
-                    axios.post('/user/'+this.$route.params.user_id+'/send', {
+                    this.messages.push({user_id: this.currentUser.id, message: this.msg, user: this.currentUser});
+                    console.log(this.messages);
+                    axios.post('/group/'+this.$route.params.group_id+'/send', {
                         'message': this.msg,
                         '_token': $('meta[name="csrf-token"]').attr('content')
                     }).then(response => {
-                        this.messages.push(response.data);
+//                        this.messages.push(response.data);
+//                        this.$store.commit('addLastGroupMessage');
                     });
                     this.msg= "";
                 }
@@ -87,6 +88,5 @@
                 return this.$store.state.storage;
             }
         }
-
     }
 </script>

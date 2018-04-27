@@ -12,16 +12,18 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+
 </head>
 <body>
 <div class="container-fluid" id="main">
     <div class="row">
-        <div class="col" id="left_side">
+        <div class="col-md-6 col-sm-12" id="left_side">
             <div class="row justify-content-center align-items-center">
-                <ul class="col-auto">
-                    <li>Follow your interests.</li>
-                    <li>Hear what people are talking about.</li>
-                    <li>Join the conversation.</li>
+                <ul class="">
+                    <li><span class="fa fa-search"></span> Follow your interests.</li>
+                    <li><span class="fa fa-users"></span> Hear what people are talking about.</li>
+                    <li><span class="fa fa-envelope"></span> Join the conversation.</li>
                 </ul>
             </div>
             <svg class="twitterIcon-bird" viewBox="0 0 1208 982" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -36,7 +38,7 @@
                 </g>
             </svg>
         </div>
-        <div class="col" id="right_side">
+        <div class="col-sm-12 col-md-6" id="right_side">
             @yield('content')
         </div>
     </div>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row justify-content-center align-items-center">
-        <div class="col-auto w-50">
+        <div class="col-lg-10 col-md-9 col-sm-10 col-xl-7">
             <form method="POST" class="" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group">

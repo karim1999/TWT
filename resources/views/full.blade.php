@@ -12,13 +12,14 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
 </head>
 <body>
+    <div id="app">
+        <router-view></router-view>
+    </div>
+</body>
 
-<div id="frame">
-    <leftArea></leftArea>
-    <router-view></router-view>
-</div>
 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
+
 @include ('footer')
 <script src="{{ asset('js/app.js') }}" defer></script>
-</body>
+
 </html>
